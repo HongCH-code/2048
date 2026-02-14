@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="2048">
+  <meta name="theme-color" content="#faf8ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a2e" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="2048 - A classic puzzle game. Slide tiles to merge them and reach 2048!">
+  <title>2048</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="game-app">
+    <!-- Header -->
+    <header class="game-header">
+      <div class="header-top">
+        <h1 class="game-title">2048</h1>
+        <div class="scores">
+          <div class="score-box">
+            <div class="score-label">SCORE</div>
+            <div class="score-value" id="current-score">0</div>
+            <div class="score-addition" id="score-addition"></div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">BEST</div>
+            <div class="score-value" id="best-score">0</div>
+          </div>
+        </div>
+      </div>
+      <p class="game-subtitle">Join the numbers and get to the <strong>2048 tile!</strong></p>
+    </header>
+
+    <!-- Game Board -->
+    <div class="game-board-wrapper">
+      <div class="game-board" id="game-board" role="grid" aria-label="2048 game board">
+        <div class="grid-background" id="grid-background"></div>
+        <div class="tile-container" id="tile-container"></div>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div class="game-overlay" id="game-overlay" aria-live="assertive">
+        <div class="overlay-content">
+          <p class="overlay-message" id="overlay-message">Game Over!</p>
+          <button class="btn btn-primary overlay-btn" id="overlay-btn">Try Again</button>
+          <button class="btn btn-secondary overlay-btn" id="overlay-continue-btn" style="display:none">Keep Going</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="game-controls">
+      <button class="btn btn-control" id="btn-new" aria-label="New Game" title="New Game">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        <span>New</span>
+      </button>
+      <button class="btn btn-control" id="btn-undo" aria-label="Undo" title="Undo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 2.12-9.36L1 10"></path>
+        </svg>
+        <span>Undo</span>
+      </button>
+      <button class="btn btn-control" id="btn-sound" aria-label="Toggle Sound" title="Toggle Sound">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="icon-sound-on">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="icon-sound-off" style="display:none">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        </svg>
+        <span>Sound</span>
+      </button>
+      <button class="btn btn-control" id="btn-theme" aria-label="Toggle Theme" title="Toggle Theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="icon-sun">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="icon-moon" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <span>Theme</span>
+      </button>
+      <button class="btn btn-control" id="btn-stats" aria-label="Statistics" title="Statistics">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Stats</span>
+      </button>
+    </div>
+
+    <p class="game-hint">Use <strong>arrow keys</strong> or <strong>swipe</strong> to play</p>
+
+    <!-- Stats Modal -->
+    <div class="modal-backdrop" id="stats-modal" style="display:none">
+      <div class="modal" role="dialog" aria-label="Game Statistics">
+        <div class="modal-header">
+          <h2>Statistics</h2>
+          <button class="btn-close" id="stats-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value" id="stat-games">0</div>
+              <div class="stat-label">Games</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-wins">0</div>
+              <div class="stat-label">Wins</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-best-tile">0</div>
+              <div class="stat-label">Best Tile</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="stat-time">0m</div>
+              <div class="stat-label">Play Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/game.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
