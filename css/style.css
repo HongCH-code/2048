@@ -297,17 +297,19 @@ body {
 }
 
 /* ===== Tile Animations ===== */
+/* Use standalone `scale` property so animations don't override
+   the `transform: translate()` used for positioning. */
 .tile-new {
   animation: tile-appear 200ms ease-out;
 }
 
 @keyframes tile-appear {
   0% {
-    transform: scale(0);
+    scale: 0;
     opacity: 0;
   }
   100% {
-    transform: scale(1);
+    scale: 1;
     opacity: 1;
   }
 }
@@ -318,9 +320,9 @@ body {
 }
 
 @keyframes tile-pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+  0% { scale: 1; }
+  50% { scale: 1.2; }
+  100% { scale: 1; }
 }
 
 /* Reduced motion */
