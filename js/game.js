@@ -133,7 +133,7 @@ class Game {
 
     // Normalize: rotate grid so we always slide left
     let workGrid = this.cloneGrid(this.grid);
-    const rotations = { left: 0, up: 1, right: 2, down: 3 };
+    const rotations = { left: 0, up: 3, right: 2, down: 1 };
     const rot = rotations[direction];
 
     for (let i = 0; i < rot; i++) {
