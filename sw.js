@@ -1,5 +1,5 @@
 // Service Worker - Cache-first strategy for offline support
-const CACHE_NAME = '2048-v1';
+const CACHE_NAME = '2048-v2';
 const ASSETS = [
   './',
   './index.html',
